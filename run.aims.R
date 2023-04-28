@@ -6,22 +6,22 @@
 D <- read.table("./read_counts_TPM.txt", header=T, stringsAsFactors=F)
 g <- read.table("./kenya.geneid.4AIMS.clean.tsv", header=T, stringsAsFactors=F)
 
-## split D into Dx number only
+## put genename into rowname
 rownames(D) <- D[,1]
 
 ## copy gene_id column to genename so we can use merge later
 D$genename <- D$gene_id
 
 ## merge two dataframes by genename  
-df.new <- merge(D,g, by="genename")
-dim(df.new)
+df <- merge(D,g, by="genename")
+write.table(df, file="kenya.count.4AIMS.tsv", sep="\t", quote=F)
+dim(df)
 
-Dx <- as.matrix(df.new[,3:47])
-
-write.table(df.new, file="kenya.count.4AIMS.tsv", sep="\t", quote=F)
+## split df.new into Dx
+Dx <- as.matrix(df[,3:47])
 
 ### read in EntrezID as vector
-ID<-as.character(df.new$geneid)
+ID<-as.character(df$geneid)
 
 ### load AIMS
 library(AIMS)
